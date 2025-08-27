@@ -13,14 +13,15 @@ const navItems = [
 ];
 ---
 
-<nav class="nav">
+<nav class="nav fixed w-full top-0 z-50 transition-all duration-300" id="main-nav">
   <div class="container">
     <div class="flex items-center justify-between">
-      <a href="/" class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-lychee-500 rounded-full flex items-center justify-center text-white font-bold">
-          LG
+      <a href="/" class="flex items-center gap-3" id="nav-logo">
+        <div class="logo-container flex items-center transition-all duration-500 ease-in-out">
+          <span class="font-display font-bold text-lychee-500 logo-text transition-all duration-500 ease-in-out" id="animated-text">
+            <span class="letter main-letter" data-letter="L">L</span><span class="letter fade-letter" data-letter="y">y</span><span class="letter fade-letter" data-letter="c">c</span><span class="letter fade-letter" data-letter="h">h</span><span class="letter fade-letter" data-letter="e">e</span><span class="letter fade-letter" data-letter="e">e</span><span class="letter word-spacer"> </span><span class="letter main-letter" data-letter="G">G</span><span class="letter fade-letter" data-letter="u">u</span><span class="letter fade-letter" data-letter="a">a</span><span class="letter fade-letter" data-letter="r">r</span><span class="letter fade-letter" data-letter="d">d</span><span class="letter fade-letter" data-letter="i">i</span><span class="letter fade-letter" data-letter="a">a</span><span class="letter fade-letter" data-letter="n">n</span><span class="letter fade-letter" data-letter="s">s</span>
+          </span>
         </div>
-        <span class="font-display font-bold text-xl text-lychee-500">Lychee Guardians</span>
       </a>
       
       <div class="hidden md:flex items-center space-x-1">
@@ -64,17 +65,121 @@ const navItems = [
   .nav-link[aria-current="page"] {
     @apply text-lychee-500 bg-lychee-50;
   }
+  
+  /* Navigation styles */
+  .nav {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav.scrolled {
+    padding: 0.5rem 0;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Logo letter animations */
+  .logo-text {
+    font-size: 1.5rem;
+    line-height: 1;
+    white-space: nowrap;
+    transition: font-size 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav.scrolled .logo-text {
+    font-size: 1.25rem;
+  }
+  
+  .letter {
+    display: inline-block;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+  
+  .main-letter {
+    font-weight: 700;
+  }
+  
+  .fade-letter {
+    opacity: 1;
+    transform: scale(1);
+    max-width: 1em;
+  }
+  
+  .word-spacer {
+    opacity: 1;
+    transform: scale(1);
+    width: 0.5em;
+    display: inline-block;
+  }
+  
+  /* Scrolled state - hide fade letters and word spacer */
+  .nav.scrolled .fade-letter {
+    opacity: 0;
+    transform: scale(0);
+    max-width: 0;
+    margin: 0;
+  }
+  
+  .nav.scrolled .word-spacer {
+    opacity: 0;
+    transform: scale(0);
+    width: 0;
+    margin: 0;
+  }
+  
+  .nav.scrolled .main-letter {
+    margin-right: 0.1em;
+  }
+  
+  .nav.scrolled .main-letter:last-of-type {
+    margin-right: 0;
+  }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const button = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
+    const nav = document.getElementById('main-nav');
     
+    // Mobile menu toggle
     if (button && menu) {
       button.addEventListener('click', function() {
         menu.classList.toggle('hidden');
       });
     }
+    
+    // Scroll effect for navigation
+    let isScrolled = false;
+    
+    function handleScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 50 && !isScrolled) {
+        // When scrolled down
+        isScrolled = true;
+        nav?.classList.add('scrolled');
+      } else if (scrollTop <= 50 && isScrolled) {
+        // When at top
+        isScrolled = false;
+        nav?.classList.remove('scrolled');
+      }
+    }
+    
+    // Throttle scroll events for better performance
+    let ticking = false;
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(handleScroll);
+        ticking = true;
+        setTimeout(() => { ticking = false; }, 16);
+      }
+    }
+    
+    window.addEventListener('scroll', requestTick);
   });
 </script>
