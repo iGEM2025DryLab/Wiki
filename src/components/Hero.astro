@@ -1,0 +1,87 @@
+---
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  showMascot?: boolean;
+}
+
+const { 
+  title = "Lychee Guardians", 
+  subtitle = "Extending Lychee Freshness with Synthetic Biology",
+  showMascot = true 
+} = Astro.props;
+---
+
+<section class="hero bg-cream-50 relative overflow-hidden">
+  <div class="container relative z-10">
+    <div class="text-center space-y-8">
+      <!-- Title with morphing animation -->
+      <div class="space-y-4">
+        <h1 
+          class="font-display font-bold text-hero text-lychee-500 pop-in"
+          id="hero-title"
+        >
+          {title}
+        </h1>
+        
+        <p class="text-xl text-ink-700 max-w-2xl mx-auto pop-in" style="animation-delay: 0.2s;">
+          {subtitle}
+        </p>
+      </div>
+      
+      <!-- Mascot speech bubble -->
+      {showMascot && (
+        <div class="flex justify-center">
+          <div class="bubble mascot-float max-w-sm pop-in" style="animation-delay: 0.4s;">
+            <p class="text-lg font-accent">
+              Hi! I'll guide you on our Quest to save lychees! 🍒
+            </p>
+          </div>
+        </div>
+      )}
+      
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap justify-center gap-4 pop-in" style="animation-delay: 0.6s;">
+        <a href="/project/" class="btn btn-primary">
+          <span>Explore Our Science</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        
+        <a href="/team/" class="btn btn-secondary">
+          <span>Meet the Team</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </a>
+        
+        <a href="/results/" class="btn btn-ghost">
+          <span>See Results</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Background decoration -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-32 w-96 h-96 bg-lychee-100 rounded-full opacity-20"></div>
+    <div class="absolute -bottom-40 -left-32 w-96 h-96 bg-leaf-100 rounded-full opacity-20"></div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const title = document.getElementById('hero-title');
+    if (title && title.textContent?.includes('Lychee Guardians')) {
+      // Add title morphing animation
+      setTimeout(() => {
+        title.style.transition = 'all 1.2s cubic-bezier(.17,.67,.27,1.2)';
+        // You can add more complex morphing logic here
+      }, 1000);
+    }
+  });
+</script>

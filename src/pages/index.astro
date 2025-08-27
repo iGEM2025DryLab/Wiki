@@ -1,0 +1,151 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import '../styles/global.css';
+---
+
+<Layout title="Lychee Guardians - iGEM 2025">
+	<Navigation />
+	<Hero />
+	
+	<!-- What is a Lychee Section -->
+	<section class="py-16 bg-white">
+		<div class="container">
+			<div class="text-center mb-12">
+				<h2 class="font-display text-h1 text-ink-900 mb-4">What is a Lychee?</h2>
+				<p class="text-xl text-ink-700 max-w-3xl mx-auto">
+					Discover the fascinating fruit that inspired our mission
+				</p>
+			</div>
+			
+			<div class="grid md:grid-cols-3 gap-8">
+				<div class="card text-center">
+					<div class="w-16 h-16 bg-lychee-100 rounded-full flex items-center justify-center mx-auto mb-4">
+						🍒
+					</div>
+					<h3 class="font-display text-xl font-semibold mb-2">Cultural Treasure</h3>
+					<p class="text-ink-700">
+						Lychees are prized in Asian cultures for their sweet, floral taste and symbolic meaning of love and romance.
+					</p>
+				</div>
+				
+				<div class="card text-center">
+					<div class="w-16 h-16 bg-leaf-100 rounded-full flex items-center justify-center mx-auto mb-4">
+						🌱
+					</div>
+					<h3 class="font-display text-xl font-semibold mb-2">Nutritional Powerhouse</h3>
+					<p class="text-ink-700">
+						Rich in vitamin C, copper, and potassium, lychees support immune function and heart health.
+					</p>
+				</div>
+				
+				<div class="card text-center">
+					<div class="w-16 h-16 bg-gold-400 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+						⚡
+					</div>
+					<h3 class="font-display text-xl font-semibold mb-2">Fragile Beauty</h3>
+					<p class="text-ink-700">
+						Unfortunately, lychees spoil quickly, losing their vibrant taste and texture within days of harvest.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- The Problem Section -->
+	<section class="py-16 bg-cream-50">
+		<div class="container">
+			<div class="text-center mb-12">
+				<h2 class="font-display text-h1 text-ink-900 mb-4">The Challenge</h2>
+				<p class="text-xl text-ink-700 max-w-3xl mx-auto">
+					Why lychee freshness matters and the problems we're solving
+				</p>
+			</div>
+			
+			<div class="max-w-4xl mx-auto">
+				<div class="card card--accent">
+					<div class="grid md:grid-cols-2 gap-8 items-center">
+						<div>
+							<h3 class="font-display text-2xl font-semibold mb-4 text-lychee-500">
+								Rapid Deterioration
+							</h3>
+							<p class="text-ink-700 leading-relaxed mb-4">
+								Fresh lychees lose their quality within 2-3 days due to enzymatic browning, 
+								moisture loss, and microbial growth. This severely limits distribution and 
+								increases food waste.
+							</p>
+							<p class="text-ink-700 leading-relaxed">
+								Our synthetic biology approach aims to extend freshness by targeting the 
+								root causes of deterioration at the molecular level.
+							</p>
+						</div>
+						<div class="text-center">
+							<div class="w-32 h-32 bg-gradient-to-br from-lychee-100 to-lychee-200 rounded-full flex items-center justify-center mx-auto">
+								<span class="text-4xl">🔬</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- Our Science Section -->
+	<section class="py-16 bg-white">
+		<div class="container">
+			<div class="text-center mb-12">
+				<h2 class="font-display text-h1 text-ink-900 mb-4">Our Scientific Approach</h2>
+				<p class="text-xl text-ink-700 max-w-3xl mx-auto">
+					Cutting-edge synthetic biology solutions for lychee preservation
+				</p>
+			</div>
+			
+			<div class="grid md:grid-cols-2 gap-8">
+				<div class="card hover:shadow-pop transition-shadow duration-300">
+					<h3 class="font-display text-xl font-semibold mb-3 text-leaf-500">Wet Lab Research</h3>
+					<p class="text-ink-700 mb-4">
+						Engineering microorganisms to produce natural preservatives and antioxidants 
+						that can extend lychee freshness without compromising taste or safety.
+					</p>
+					<a href="/wetlab/" class="text-leaf-500 font-semibold hover:text-leaf-600 transition-colors">
+						Learn more about our lab work →
+					</a>
+				</div>
+				
+				<div class="card hover:shadow-pop transition-shadow duration-300">
+					<h3 class="font-display text-xl font-semibold mb-3 text-lychee-500">Dry Lab Modeling</h3>
+					<p class="text-ink-700 mb-4">
+						Computational models to predict optimal treatment conditions, simulate molecular 
+						interactions, and design the most effective preservation strategies.
+					</p>
+					<a href="/drylab/" class="text-lychee-500 font-semibold hover:text-lychee-600 transition-colors">
+						Explore our models →
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- Call to Action -->
+	<section class="py-16 bg-gradient-to-r from-lychee-500 to-leaf-500 text-white">
+		<div class="container text-center">
+			<h2 class="font-display text-h1 mb-4">Start the Quest</h2>
+			<p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+				Join us on our journey to revolutionize food preservation and reduce waste
+			</p>
+			
+			<div class="flex flex-wrap justify-center gap-4">
+				<a href="/project/" class="btn bg-white text-lychee-500 hover:bg-gray-50 font-semibold">
+					The Problem
+				</a>
+				<a href="/wetlab/" class="btn bg-white text-leaf-500 hover:bg-gray-50 font-semibold">
+					The Science  
+				</a>
+				<a href="/team/" class="btn bg-white text-ink-900 hover:bg-gray-50 font-semibold">
+					The People
+				</a>
+			</div>
+		</div>
+	</section>
+</Layout>

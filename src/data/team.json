@@ -1,0 +1,32 @@
+{
+  "members": [
+    {
+      "name": "Team Member 1",
+      "role": "Project Leader",
+      "bio": "Leading our lychee preservation research",
+      "funFact": "Can identify lychee varieties by smell alone",
+      "image": "/assets/team/member1.jpg"
+    },
+    {
+      "name": "Team Member 2", 
+      "role": "Wet Lab Specialist",
+      "bio": "Engineering microorganisms for natural preservation",
+      "funFact": "Has grown over 20 different bacterial strains",
+      "image": "/assets/team/member2.jpg"
+    },
+    {
+      "name": "Team Member 3",
+      "role": "Dry Lab Researcher", 
+      "bio": "Computational modeling and data analysis",
+      "funFact": "Built molecular dynamics simulations in their spare time",
+      "image": "/assets/team/member3.jpg"
+    },
+    {
+      "name": "Team Member 4",
+      "role": "Human Practices Lead",
+      "bio": "Community engagement and stakeholder research", 
+      "funFact": "Interviewed over 100 farmers about food preservation",
+      "image": "/assets/team/member4.jpg"
+    }
+  ]
+}
