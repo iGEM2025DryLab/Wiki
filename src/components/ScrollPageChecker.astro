@@ -1,0 +1,304 @@
+---
+// Scroll-based page type checker component
+---
+
+<!-- Page type indicator -->
+<div id="page-type-indicator" class="fixed top-20 right-4 z-50 transition-all duration-300 opacity-0">
+  <div class="bg-white rounded-full px-4 py-2 shadow-lg border-2" id="indicator-badge">
+    <span class="text-sm font-semibold" id="page-type-text">Loading</span>
+  </div>
+</div>
+
+<!-- Page overlay for visual transitions -->
+<div id="page-overlay" class="fixed inset-0 pointer-events-none transition-all duration-500 z-10 opacity-0"></div>
+
+<script>
+  interface PageType {
+    name: string;
+    color: string;
+    overlayClass: string;
+    navStyle: string;
+  }
+
+  // Define different page types based on scroll sections
+  const pageTypes: PageType[] = [
+    {
+      name: "Hero",
+      color: "#E63946", // lychee-500
+      overlayClass: "bg-gradient-to-b from-lychee-50/20 to-transparent",
+      navStyle: "nav-hero"
+    },
+    {
+      name: "About",
+      color: "#4CAF50", // leaf-500
+      overlayClass: "bg-gradient-to-b from-leaf-50/20 to-transparent", 
+      navStyle: "nav-about"
+    },
+    {
+      name: "Problem",
+      color: "#FFB703", // gold-400
+      overlayClass: "bg-gradient-to-b from-gold-100/20 to-transparent",
+      navStyle: "nav-problem"
+    },
+    {
+      name: "Science",
+      color: "#2E2E38", // ink-900
+      overlayClass: "bg-gradient-to-b from-ink-100/20 to-transparent",
+      navStyle: "nav-science"
+    },
+    {
+      name: "Action",
+      color: "#E63946", // lychee-500
+      overlayClass: "bg-gradient-to-b from-lychee-100/30 to-leaf-100/20",
+      navStyle: "nav-action"
+    }
+  ];
+
+  class ScrollPageChecker {
+    private indicator: HTMLElement | null = null;
+    private badge: HTMLElement | null = null;
+    private textElement: HTMLElement | null = null;
+    private overlay: HTMLElement | null = null;
+    private nav: HTMLElement | null = null;
+    private currentPageType = 0;
+    private sections: HTMLElement[] = [];
+
+    constructor() {
+      this.init();
+    }
+
+    private init(): void {
+      // Wait for DOM to be fully loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.setup());
+      } else {
+        this.setup();
+      }
+    }
+
+    private setup(): void {
+      this.indicator = document.getElementById('page-type-indicator');
+      this.badge = document.getElementById('indicator-badge');
+      this.textElement = document.getElementById('page-type-text');
+      this.overlay = document.getElementById('page-overlay');
+      this.nav = document.querySelector('nav');
+
+      // Find all major sections using their IDs
+      this.sections = [
+        document.querySelector('.hero'),
+        document.querySelector('#about-section'), 
+        document.querySelector('#problem-section'), 
+        document.querySelector('#science-section'), 
+        document.querySelector('#action-section')
+      ].filter(Boolean) as HTMLElement[];
+
+      if (this.sections.length > 0) {
+        this.bindEvents();
+        this.updatePageType(0); // Start with first section
+        
+        // Show indicator after brief delay
+        setTimeout(() => {
+          if (this.indicator) {
+            this.indicator.style.opacity = '1';
+          }
+        }, 1000);
+      }
+    }
+
+    private bindEvents(): void {
+      let ticking = false;
+
+      const handleScroll = () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            this.checkCurrentSection();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      
+      // Handle resize to recalculate positions
+      window.addEventListener('resize', () => {
+        setTimeout(() => this.checkCurrentSection(), 100);
+      });
+    }
+
+    private checkCurrentSection(): void {
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      let newPageType = this.currentPageType;
+
+      // Find which section we're currently in
+      for (let i = 0; i < this.sections.length; i++) {
+        const section = this.sections[i];
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top + window.scrollY;
+        const sectionBottom = sectionTop + rect.height;
+
+        if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+          newPageType = i;
+          break;
+        }
+      }
+
+      // Update if changed
+      if (newPageType !== this.currentPageType) {
+        this.updatePageType(newPageType);
+      }
+    }
+
+    private updatePageType(typeIndex: number): void {
+      if (typeIndex >= pageTypes.length) return;
+
+      const prevType = this.currentPageType;
+      this.currentPageType = typeIndex;
+      const currentType = pageTypes[typeIndex];
+
+      // Update indicator
+      if (this.textElement) {
+        this.textElement.textContent = currentType.name;
+      }
+
+      if (this.badge) {
+        this.badge.style.borderColor = currentType.color;
+        this.badge.style.color = currentType.color;
+      }
+
+      // Update overlay with smooth transition
+      if (this.overlay) {
+        this.overlay.className = `fixed inset-0 pointer-events-none transition-all duration-500 z-10 ${currentType.overlayClass} opacity-100`;
+      }
+
+      // Update navigation style
+      if (this.nav) {
+        // Remove previous nav classes
+        pageTypes.forEach(type => {
+          this.nav!.classList.remove(type.navStyle);
+        });
+        // Add current nav class
+        this.nav.classList.add(currentType.navStyle);
+      }
+
+      // Trigger custom event for other components to listen
+      window.dispatchEvent(new CustomEvent('pageTypeChanged', {
+        detail: {
+          from: prevType,
+          to: typeIndex,
+          pageType: currentType
+        }
+      }));
+
+      // Add visual feedback
+      this.animateTransition(currentType);
+    }
+
+    private animateTransition(pageType: PageType): void {
+      // Pulse animation for indicator
+      if (this.indicator) {
+        this.indicator.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          if (this.indicator) {
+            this.indicator.style.transform = 'scale(1)';
+          }
+        }, 150);
+      }
+
+      // Remove active class from all sections
+      this.sections.forEach(section => {
+        section.classList.remove('active-page-section');
+        section.style.setProperty('--active-section-color', '');
+      });
+
+      // Add active class and color to current section
+      const activeSection = this.sections[this.currentPageType];
+      if (activeSection) {
+        activeSection.classList.add('active-page-section');
+        activeSection.style.setProperty('--active-section-color', pageType.color);
+        
+        // Add slide-in animation to section content
+        const sectionContent = activeSection.querySelector('.container');
+        if (sectionContent) {
+          sectionContent.classList.add('page-transition-enter');
+          
+          // Remove animation class after completion
+          setTimeout(() => {
+            sectionContent.classList.remove('page-transition-enter');
+          }, 500);
+        }
+      }
+      
+      // Update document body class for global styling
+      document.body.className = document.body.className.replace(/page-type-\w+/g, '');
+      document.body.classList.add(`page-type-${pageType.name.toLowerCase()}`);
+    }
+
+    // Public method to manually set page type
+    public setPageType(typeIndex: number): void {
+      if (typeIndex >= 0 && typeIndex < pageTypes.length) {
+        this.updatePageType(typeIndex);
+      }
+    }
+
+    // Get current page type info
+    public getCurrentPageType(): PageType {
+      return pageTypes[this.currentPageType];
+    }
+  }
+
+  // Initialize the scroll checker
+  const scrollChecker = new ScrollPageChecker();
+
+  // Expose to global scope for external access
+  (window as any).scrollPageChecker = scrollChecker;
+
+  // Example of listening to page type changes
+  window.addEventListener('pageTypeChanged', (event: any) => {
+    console.log(`Page type changed from ${event.detail.from} to ${event.detail.to}:`, event.detail.pageType);
+  });
+</script>
+
+<style>
+  #page-type-indicator {
+    backdrop-filter: blur(8px);
+  }
+
+  /* Navigation styles for different page types */
+  .nav.nav-hero {
+    background: rgba(255, 248, 240, 0.9);
+    border-bottom-color: #E63946;
+  }
+
+  .nav.nav-about {
+    background: rgba(240, 253, 244, 0.9);
+    border-bottom-color: #4CAF50;
+  }
+
+  .nav.nav-problem {
+    background: rgba(255, 251, 235, 0.9);
+    border-bottom-color: #FFB703;
+  }
+
+  .nav.nav-science {
+    background: rgba(248, 250, 252, 0.9);
+    border-bottom-color: #2E2E38;
+  }
+
+  .nav.nav-action {
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(76, 175, 80, 0.1));
+    border-bottom-color: #E63946;
+  }
+
+  /* Smooth transitions for all page type changes */
+  .nav {
+    transition: background-color 0.5s ease, border-bottom-color 0.5s ease;
+  }
+
+  /* Hide indicator on mobile to save space */
+  @media (max-width: 768px) {
+    #page-type-indicator {
+      display: none;
+    }
+  }
+</style>

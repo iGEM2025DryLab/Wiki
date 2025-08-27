@@ -1,0 +1,144 @@
+---
+// Demo component to showcase page type functionality
+---
+
+<!-- Demo controls (only shown in development) -->
+<div id="page-type-controls" class="fixed bottom-4 left-4 z-50 bg-white rounded-lg shadow-lg p-4 opacity-90 hover:opacity-100 transition-opacity">
+  <h4 class="text-sm font-bold mb-2 text-ink-900">Page Type Demo</h4>
+  <div class="flex flex-col gap-2">
+    <button 
+      class="demo-btn bg-lychee-500 text-white"
+      onclick="window.scrollPageChecker?.setPageType(0)"
+    >
+      Hero Mode
+    </button>
+    <button 
+      class="demo-btn bg-leaf-500 text-white"
+      onclick="window.scrollPageChecker?.setPageType(1)"
+    >
+      About Mode  
+    </button>
+    <button 
+      class="demo-btn bg-gold-400 text-white"
+      onclick="window.scrollPageChecker?.setPageType(2)"
+    >
+      Problem Mode
+    </button>
+    <button 
+      class="demo-btn bg-ink-900 text-white"
+      onclick="window.scrollPageChecker?.setPageType(3)"
+    >
+      Science Mode
+    </button>
+    <button 
+      class="demo-btn bg-gradient-to-r from-lychee-500 to-leaf-500 text-white"
+      onclick="window.scrollPageChecker?.setPageType(4)"
+    >
+      Action Mode
+    </button>
+  </div>
+  
+  <div class="mt-3 pt-2 border-t border-gray-200">
+    <button 
+      class="text-xs text-ink-700 hover:text-ink-900"
+      onclick="toggleAutoScroll()"
+      id="auto-scroll-btn"
+    >
+      Enable Auto-Scroll Demo
+    </button>
+  </div>
+</div>
+
+<script>
+  let autoScrollInterval: number | null = null;
+  let currentDemo = 0;
+  
+  function toggleAutoScroll() {
+    const btn = document.getElementById('auto-scroll-btn');
+    
+    if (autoScrollInterval) {
+      clearInterval(autoScrollInterval);
+      autoScrollInterval = null;
+      if (btn) btn.textContent = 'Enable Auto-Scroll Demo';
+    } else {
+      if (btn) btn.textContent = 'Stop Auto-Scroll Demo';
+      
+      autoScrollInterval = setInterval(() => {
+        currentDemo = (currentDemo + 1) % 5;
+        (window as any).scrollPageChecker?.setPageType(currentDemo);
+        
+        // Add visual feedback
+        const buttons = document.querySelectorAll('.demo-btn');
+        buttons.forEach((btn, index) => {
+          if (index === currentDemo) {
+            btn.classList.add('scale-110', 'ring-2', 'ring-white');
+          } else {
+            btn.classList.remove('scale-110', 'ring-2', 'ring-white');
+          }
+        });
+      }, 2000);
+    }
+  }
+  
+  // Add enhanced feedback for manual button clicks
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.demo-btn');
+    buttons.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        // Clear auto scroll if running
+        if (autoScrollInterval) {
+          clearInterval(autoScrollInterval);
+          autoScrollInterval = null;
+          const autoBtn = document.getElementById('auto-scroll-btn');
+          if (autoBtn) autoBtn.textContent = 'Enable Auto-Scroll Demo';
+        }
+        
+        // Visual feedback
+        buttons.forEach(b => b.classList.remove('scale-110', 'ring-2', 'ring-white'));
+        btn.classList.add('scale-110', 'ring-2', 'ring-white');
+        
+        setTimeout(() => {
+          btn.classList.remove('scale-110', 'ring-2', 'ring-white');
+        }, 1000);
+        
+        currentDemo = index;
+      });
+    });
+  });
+  
+  // Listen to page type changes and update button states
+  window.addEventListener('pageTypeChanged', (event: any) => {
+    const buttons = document.querySelectorAll('.demo-btn');
+    buttons.forEach((btn, index) => {
+      if (index === event.detail.to) {
+        btn.classList.add('ring-2', 'ring-white');
+      } else {
+        btn.classList.remove('ring-2', 'ring-white');
+      }
+    });
+  });
+</script>
+
+<style>
+  .demo-btn {
+    @apply px-3 py-2 rounded text-sm font-medium transition-all duration-200;
+    @apply hover:scale-105 active:scale-95;
+  }
+  
+  /* Hide demo controls in production */
+  @media (max-width: 768px) {
+    #page-type-controls {
+      bottom: 60px; /* Above mobile nav if present */
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+    }
+  }
+  
+  /* Optional: Hide in production builds */
+  @media (prefers-reduced-motion: reduce) {
+    .demo-btn {
+      transition: none;
+    }
+  }
+</style>

@@ -1,10 +1,13 @@
 ---
+import ScrollPageChecker from '../components/ScrollPageChecker.astro';
+
 export interface Props {
 	title: string;
 	description?: string;
+	enableScrollChecker?: boolean;
 }
 
-const { title, description = "iGEM 2025 Lychee Guardians - Extending Lychee Freshness with Synthetic Biology" } = Astro.props;
+const { title, description = "iGEM 2025 Lychee Guardians - Extending Lychee Freshness with Synthetic Biology", enableScrollChecker = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -26,6 +29,8 @@ const { title, description = "iGEM 2025 Lychee Guardians - Extending Lychee Fres
 		<main>
 			<slot />
 		</main>
+		
+		{enableScrollChecker && <ScrollPageChecker />}
 		
 		<style>
 			html {

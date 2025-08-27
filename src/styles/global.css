@@ -191,6 +191,23 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes pageTypeGlow {
+  0% { box-shadow: 0 0 0 rgba(230, 57, 70, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(230, 57, 70, 0.4); }
+  100% { box-shadow: 0 0 0 rgba(230, 57, 70, 0.2); }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
 .mascot-float {
   animation: float 4s ease-in-out infinite;
 }
@@ -199,12 +216,68 @@
   animation: pop var(--dur-med) var(--ease-pop) both;
 }
 
+.slide-in {
+  animation: slideIn var(--dur-med) var(--ease-pop) both;
+}
+
+.page-glow {
+  animation: pageTypeGlow 2s ease-in-out;
+}
+
+/* Page type transition effects */
+.page-transition-enter {
+  animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.page-transition-active {
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Section highlighting for active page type */
+section.active-page-section {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+section.active-page-section::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: linear-gradient(45deg, transparent, var(--active-section-color, #E63946), transparent);
+  border-radius: var(--radius-lg);
+  z-index: -1;
+  opacity: 0.1;
+  animation: pageTypeGlow 3s ease-in-out infinite;
+}
+
 /* Base styles */
 body {
   font-family: var(--font-body);
   background: var(--color-cream-50);
   color: var(--color-ink-900);
   line-height: 1.6;
+  transition: background-color 0.5s ease;
+}
+
+/* Page type specific body styles */
+body.page-type-hero {
+  background: linear-gradient(135deg, var(--color-cream-50), #FFF1F2);
+}
+
+body.page-type-about {
+  background: linear-gradient(135deg, var(--color-cream-50), #F0FDF4);
+}
+
+body.page-type-problem {
+  background: linear-gradient(135deg, var(--color-cream-50), #FFF8F0);
+}
+
+body.page-type-science {
+  background: linear-gradient(135deg, var(--color-cream-50), var(--color-ink-50));
+}
+
+body.page-type-action {
+  background: linear-gradient(135deg, #FFF1F2, #F0FDF4);
 }
 
 h1, h2, h3, h4, h5, h6 {

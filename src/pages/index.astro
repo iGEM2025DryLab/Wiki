@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Hero from '../components/Hero.astro';
+import PageTypeDemo from '../components/PageTypeDemo.astro';
 import '../styles/global.css';
 ---
 
@@ -10,7 +11,7 @@ import '../styles/global.css';
 	<Hero />
 	
 	<!-- What is a Lychee Section -->
-	<section class="py-16 bg-white">
+	<section id="about-section" class="py-16 bg-white section-about">
 		<div class="container">
 			<div class="text-center mb-12">
 				<h2 class="font-display text-h1 text-ink-900 mb-4">What is a Lychee?</h2>
@@ -54,7 +55,7 @@ import '../styles/global.css';
 	</section>
 	
 	<!-- The Problem Section -->
-	<section class="py-16 bg-cream-50">
+	<section id="problem-section" class="py-16 bg-cream-50 section-problem">
 		<div class="container">
 			<div class="text-center mb-12">
 				<h2 class="font-display text-h1 text-ink-900 mb-4">The Challenge</h2>
@@ -92,7 +93,7 @@ import '../styles/global.css';
 	</section>
 	
 	<!-- Our Science Section -->
-	<section class="py-16 bg-white">
+	<section id="science-section" class="py-16 bg-white section-science">
 		<div class="container">
 			<div class="text-center mb-12">
 				<h2 class="font-display text-h1 text-ink-900 mb-4">Our Scientific Approach</h2>
@@ -128,7 +129,7 @@ import '../styles/global.css';
 	</section>
 	
 	<!-- Call to Action -->
-	<section class="py-16 bg-gradient-to-r from-lychee-500 to-leaf-500 text-white">
+	<section id="action-section" class="py-16 bg-gradient-to-r from-lychee-500 to-leaf-500 text-white section-action">
 		<div class="container text-center">
 			<h2 class="font-display text-h1 mb-4">Start the Quest</h2>
 			<p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
@@ -148,4 +149,7 @@ import '../styles/global.css';
 			</div>
 		</div>
 	</section>
+	
+	<!-- Demo Component (only visible in development) -->
+	<PageTypeDemo />
 </Layout>
