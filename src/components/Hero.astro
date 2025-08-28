@@ -12,76 +12,371 @@ const {
 } = Astro.props;
 ---
 
+<!-- Handwriting Animation Hero Section -->
+<section class="hero-intro bg-cream-50 fixed top-0 left-0 w-full z-10 overflow-hidden min-h-screen flex items-center justify-center" id="handwriting-hero">
+  <div class="text-center relative">
+    <!-- Introduction text that appears first -->
+    <div id="intro-text" class="opacity-0">
+      <span class="text-3xl md:text-5xl font-light text-ink-700">We are</span>
+    </div>
+    
+    <!-- "And we work on" text - initially hidden, appears on scroll -->
+    <div id="work-text" class="absolute top-0 left-0 opacity-0 text-3xl md:text-5xl font-light text-ink-700">
+      <span>And we work on</span>
+    </div>
+    
+    <!-- Handwritten team name with SVG effect -->
+    <div id="handwritten-name" class="mt-8 relative">
+      <h1 class="handwritten-text text-8xl md:text-9xl font-bold text-lychee-500 min-h-[6rem] md:min-h-[8rem]" 
+          style="font-family: 'Kalam', cursive;" 
+          data-title={title}>
+        <span id="handwritten-letters"></span>
+      </h1>
+      
+      <!-- Enhanced SVG handwriting overlay -->
+      <div class="absolute inset-0 pointer-events-none" id="svg-handwriting">
+        <svg viewBox="0 0 800 200" class="w-full h-full opacity-0 transition-opacity duration-500">
+          <!-- Handwriting stroke paths will be added dynamically -->
+          <g id="writing-strokes">
+            <!-- Letter L -->
+            <path class="writing-stroke" d="M50,50 L50,150 L100,150" stroke="#e63946" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Letter y -->
+            <path class="writing-stroke" d="M120,80 Q140,60 160,80 Q180,100 160,140 Q140,180 120,160" stroke="#e63946" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Continue for other letters... -->
+          </g>
+          
+          <!-- Animated pen tip -->
+          <circle id="pen-tip" r="3" fill="#e63946" opacity="0" class="drop-shadow-sm">
+            <animate attributeName="opacity" values="0;1;0" dur="0.3s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+      
+      <!-- Lychee character mascot -->
+      <div id="lychee-character" class="absolute opacity-0 transition-all duration-1000" 
+           style="bottom: -30px; right: -80px; transform: scale(0.8);">
+        {showMascot && (
+          <div class="relative">
+            <div class="w-24 h-24 md:w-32 md:h-32 bg-lychee-100 rounded-full flex items-center justify-center">
+              <span class="text-4xl md:text-5xl">🍒</span>
+            </div>
+            <!-- Speech bubble -->
+            <div class="absolute -top-16 -left-20 bg-white rounded-lg px-3 py-2 shadow-lg border-2 border-lychee-200 opacity-0" id="mascot-speech">
+              <p class="text-sm text-ink-700 whitespace-nowrap">Ready to save lychees!</p>
+              <div class="absolute bottom-0 left-8 transform translate-y-full">
+                <div class="w-0 h-0 border-l-4 border-r-4 border-t-8 border-transparent border-t-white"></div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main content section (appears after scroll) -->
 <section id="hero" class="hero bg-cream-50 relative overflow-hidden min-h-screen flex items-center">
   <div class="container relative z-10">
     <div class="text-center space-y-8">
-      <!-- Title with morphing animation -->
-      <div class="space-y-4">
-        <h1 
-          class="font-display font-bold text-hero text-lychee-500 pop-in"
-          id="hero-title"
-        >
-          {title}
-        </h1>
-        
-        <p class="text-xl text-ink-700 max-w-2xl mx-auto pop-in" style="animation-delay: 0.2s;">
+      <!-- Subtitle and buttons appear after handwriting animation -->
+      <div class="space-y-6" id="hero-content">
+        <p class="text-xl text-ink-700 max-w-2xl mx-auto opacity-0 transform translate-y-8 transition-all duration-800" id="hero-subtitle">
           {subtitle}
         </p>
-      </div>
-      
-      <!-- Mascot speech bubble -->
-      {showMascot && (
-        <div class="flex justify-center">
-          <div class="bubble mascot-float max-w-sm pop-in" style="animation-delay: 0.4s;">
-            <p class="text-lg font-accent">
-              Hi! I'll guide you on our Quest to save lychees! 🍒
-            </p>
-          </div>
+        
+        <!-- CTA Buttons with staggered animation -->
+        <div class="flex flex-wrap justify-center gap-4 opacity-0 transform translate-y-8 transition-all duration-800" id="hero-buttons" style="transition-delay: 0.2s;">
+          <a href="/project/" class="btn btn-primary transform hover:scale-105 transition-transform">
+            <span>Explore Our Science</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+          
+          <a href="/team/" class="btn btn-secondary transform hover:scale-105 transition-transform">
+            <span>Meet the Team</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </a>
+          
+          <a href="/results/" class="btn btn-ghost transform hover:scale-105 transition-transform">
+            <span>See Results</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </a>
         </div>
-      )}
-      
-      <!-- CTA Buttons -->
-      <div class="flex flex-wrap justify-center gap-4 pop-in" style="animation-delay: 0.6s;">
-        <a href="/project/" class="btn btn-primary">
-          <span>Explore Our Science</span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </a>
-        
-        <a href="/team/" class="btn btn-secondary">
-          <span>Meet the Team</span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
-        </a>
-        
-        <a href="/results/" class="btn btn-ghost">
-          <span>See Results</span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-        </a>
       </div>
     </div>
   </div>
   
-  <!-- Background decoration -->
+  <!-- Enhanced background decoration -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -right-32 w-96 h-96 bg-lychee-100 rounded-full opacity-20"></div>
-    <div class="absolute -bottom-40 -left-32 w-96 h-96 bg-leaf-100 rounded-full opacity-20"></div>
+    <div class="absolute -top-40 -right-32 w-96 h-96 bg-lychee-100 rounded-full opacity-20 animate-pulse"></div>
+    <div class="absolute -bottom-40 -left-32 w-96 h-96 bg-leaf-100 rounded-full opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+    <div class="absolute top-1/2 left-1/4 w-32 h-32 bg-lychee-50 rounded-full opacity-30 animate-bounce" style="animation-duration: 3s; animation-delay: 2s;"></div>
   </div>
 </section>
 
+<!-- Enhanced CSS Styles -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+  
+  .handwritten-text {
+    position: relative;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+  
+  .letter {
+    display: inline-block;
+    opacity: 0;
+    transform: scale(0.3) rotate(-8deg) translateY(30px);
+    animation: writeIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    transform-origin: bottom center;
+  }
+  
+  @keyframes writeIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3) rotate(-8deg) translateY(30px);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.15) rotate(2deg) translateY(-8px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg) translateY(0);
+    }
+  }
+  
+  .letter.space {
+    width: 0.5em;
+  }
+  
+  .handwritten-text.complete {
+    animation: subtleWobble 6s ease-in-out 1s infinite;
+  }
+  
+  @keyframes subtleWobble {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    25% { transform: rotate(-0.1deg) translateY(0.5px); }
+    50% { transform: rotate(0deg) translateY(0); }
+    75% { transform: rotate(0.08deg) translateY(-0.5px); }
+  }
+  
+  .fade-in {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* SVG writing stroke animation */
+  .writing-stroke {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: writeStroke 2s ease-in-out forwards;
+  }
+  
+  @keyframes writeStroke {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  /* Enhanced mascot animations */
+  #lychee-character {
+    animation: mascotBounce 2s ease-in-out 3s infinite;
+  }
+  
+  @keyframes mascotBounce {
+    0%, 100% { transform: scale(0.8) translateY(0); }
+    50% { transform: scale(0.85) translateY(-5px); }
+  }
+  
+  /* Scroll transition effects */
+  .scroll-transition {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const title = document.getElementById('hero-title');
-    if (title && title.textContent?.includes('Lychee Guardians')) {
-      // Add title morphing animation
-      setTimeout(() => {
-        title.style.transition = 'all 1.2s cubic-bezier(.17,.67,.27,1.2)';
-        // You can add more complex morphing logic here
-      }, 1000);
+    const introText = document.getElementById('intro-text');
+    const workText = document.getElementById('work-text');
+    const handwrittenName = document.getElementById('handwritten-name');
+    const handwrittenLetters = document.getElementById('handwritten-letters');
+    const handwrittenText = document.querySelector('.handwritten-text');
+    const lycheeCharacter = document.getElementById('lychee-character');
+    const mascotSpeech = document.getElementById('mascot-speech');
+    const heroSubtitle = document.getElementById('hero-subtitle');
+    const heroButtons = document.getElementById('hero-buttons');
+    const titleElement = document.querySelector('[data-title]');
+    const fullText = titleElement?.getAttribute('data-title') || 'Lychee Guardians';
+    
+    let animationComplete = false;
+    let lycheeSpan = null;
+    let guardiansSpan = null;
+    
+    // Step 1: Show "We are" after a brief delay
+    setTimeout(() => {
+      if (introText) {
+        introText.classList.add('fade-in');
+        introText.style.opacity = '1';
+      }
+    }, 1000);
+    
+    // Step 2: Start handwritten letter animation
+    setTimeout(() => {
+      if (handwrittenLetters) {
+        let letterIndex = 0;
+        
+        // Create word containers
+        lycheeSpan = document.createElement('span');
+        lycheeSpan.id = 'lychee-word';
+        lycheeSpan.className = 'inline-block transition-transform duration-1000 scroll-transition';
+        
+        const spaceSpan = document.createElement('span');
+        spaceSpan.className = 'inline-block';
+        spaceSpan.innerHTML = '&nbsp;';
+        
+        guardiansSpan = document.createElement('span');
+        guardiansSpan.id = 'guardians-word';
+        guardiansSpan.className = 'inline-block transition-all duration-1000 scroll-transition';
+        
+        handwrittenLetters.appendChild(lycheeSpan);
+        handwrittenLetters.appendChild(spaceSpan);
+        handwrittenLetters.appendChild(guardiansSpan);
+        
+        function writeNextLetter() {
+          if (letterIndex < fullText.length) {
+            const letter = fullText[letterIndex];
+            const letterSpan = document.createElement('span');
+            
+            if (letter === ' ') {
+              // Skip space - handled by spaceSpan
+            } else {
+              letterSpan.textContent = letter;
+              letterSpan.classList.add('letter');
+              letterSpan.style.animationDelay = `${letterIndex * 0.15}s`;
+              
+              // Add to appropriate word span
+              if (letterIndex < 6) { // "Lychee"
+                lycheeSpan.appendChild(letterSpan);
+              } else if (letterIndex > 6) { // "Guardians"
+                guardiansSpan.appendChild(letterSpan);
+              }
+            }
+            
+            letterIndex++;
+            setTimeout(writeNextLetter, 120);
+          } else {
+            // Animation complete
+            setTimeout(() => {
+              if (handwrittenText) {
+                handwrittenText.classList.add('complete');
+              }
+              
+              animationComplete = true;
+              
+              // Show lychee character and speech bubble
+              if (lycheeCharacter) {
+                lycheeCharacter.style.opacity = '1';
+                setTimeout(() => {
+                  if (mascotSpeech) {
+                    mascotSpeech.style.opacity = '1';
+                  }
+                }, 500);
+              }
+              
+              // Show main content
+              setTimeout(() => {
+                if (heroSubtitle) {
+                  heroSubtitle.style.opacity = '1';
+                  heroSubtitle.style.transform = 'translateY(0)';
+                }
+                
+                setTimeout(() => {
+                  if (heroButtons) {
+                    heroButtons.style.opacity = '1';
+                    heroButtons.style.transform = 'translateY(0)';
+                  }
+                }, 200);
+              }, 1000);
+              
+              // Trigger navigation appearance
+              setTimeout(() => {
+                const event = new CustomEvent('heroAnimationComplete');
+                document.dispatchEvent(event);
+              }, 2000);
+            }, 800);
+          }
+        }
+        
+        writeNextLetter();
+      }
+    }, 2500);
+    
+    // Scroll handler for transition effect
+    let transitionComplete = false;
+    
+    function handleScroll() {
+      if (!animationComplete) return;
+      
+      const scrollY = window.scrollY;
+      const animationZone = window.innerHeight * 0.9;
+      const handwritingHero = document.getElementById('handwriting-hero');
+      
+      if (scrollY <= animationZone && !transitionComplete) {
+        const progress = Math.min(scrollY / animationZone, 1);
+        
+        // "We are" fade out
+        if (introText) {
+          const weAreProgress = Math.max(0, (progress - 0.2) / 0.4);
+          introText.style.opacity = Math.max(0, 1 - weAreProgress);
+          introText.style.transform = `translateY(${-20 * weAreProgress}px)`;
+        }
+        
+        // "Guardians" fade out
+        if (guardiansSpan) {
+          const guardiansProgress = Math.max(0, (progress - 0.3) / 0.4);
+          guardiansSpan.style.opacity = Math.max(0, 1 - guardiansProgress);
+          guardiansSpan.style.transform = `translateY(${20 * guardiansProgress}px)`;
+        }
+        
+        // "Lychee" move right
+        if (lycheeSpan) {
+          const lycheeProgress = Math.max(0, (progress - 0.4) / 0.5);
+          lycheeSpan.style.transform = `translateX(${120 * lycheeProgress}px)`;
+        }
+        
+        // "And we work on" fade in
+        if (workText) {
+          const workProgress = Math.max(0, (progress - 0.5) / 0.4);
+          workText.style.opacity = workProgress;
+          workText.style.transform = `translateX(${-20 * (1 - workProgress)}px)`;
+        }
+        
+        if (progress >= 1) {
+          transitionComplete = true;
+        }
+      } else if (scrollY > animationZone) {
+        if (handwritingHero) {
+          handwritingHero.style.display = 'none';
+        }
+      }
     }
+    
+    window.addEventListener('scroll', handleScroll);
   });
 </script>

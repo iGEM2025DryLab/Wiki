@@ -68,6 +68,12 @@
     opacity: 1;
   }
   
+  /* Hide during handwriting animation */
+  #scroll-nav-container.hero-animating {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
   #scroll-nav-container:hover {
     transform: translateY(-50%) scale(1.05);
   }
@@ -282,5 +288,16 @@
     if (sectionsCountSpan) {
       sectionsCountSpan.textContent = sections.length.toString();
     }
+    
+    // Hide during hero animation, show after completion
+    if (navContainer) {
+      navContainer.classList.add('hero-animating');
+    }
+    
+    document.addEventListener('heroAnimationComplete', function() {
+      if (navContainer) {
+        navContainer.classList.remove('hero-animating');
+      }
+    });
   });
 </script>

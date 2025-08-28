@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(D:\\code\\iGEM\\Page/**)",
+      "Read(D:\\code\\iGEM\\Page\\writing/**)",
+      "Read(D:\\code\\iGEM\\Page\\writing\\demo/**)",
+      "Read(D:\\code\\iGEM\\Page\\writing\\src\\pages/**)",
+      "Read(D:\\code\\iGEM\\Page\\writing\\src\\components/**)",
+      "Read(D:\\code\\iGEM\\Page\\writing\\src\\components/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

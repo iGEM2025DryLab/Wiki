@@ -13,7 +13,7 @@ const navItems = [
 ];
 ---
 
-<nav class="nav fixed w-full top-0 z-50 transition-all duration-300" id="main-nav">
+<nav class="nav fixed w-full top-0 z-50 transform -translate-y-full opacity-0 transition-all duration-1000 ease-out" id="main-nav">
   <div class="container">
     <div class="flex items-center justify-between">
       <a href="/" class="flex items-center gap-3" id="nav-logo">
@@ -181,5 +181,14 @@ const navItems = [
     }
     
     window.addEventListener('scroll', requestTick);
+    
+    // Listen for hero animation completion
+    document.addEventListener('heroAnimationComplete', function() {
+      const nav = document.getElementById('main-nav');
+      if (nav) {
+        nav.classList.remove('-translate-y-full', 'opacity-0');
+        nav.classList.add('translate-y-0', 'opacity-100');
+      }
+    });
   });
 </script>
