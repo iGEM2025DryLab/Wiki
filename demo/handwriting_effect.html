@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lychee Guardians – True Handwriting (stroke-by-stroke)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#8f2b24;          /* lychee peel red */
+            --ink:#2b1b18;         /* dark ink stroke */
+            --paper:#f7e2cf;       /* creamy pulp */
+            --shadow:#00000066;
+            --stroke-width:7;
+            --gap:130;             /* pause between strokes (ms) */
+            --speed:1;             /* global speed multiplier (1 = normal, 2 = 2x faster) */
+        }
+        html,body{height:100%}
+        body{margin:0;display:grid;place-items:center;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+        .wrap{ width:min(1200px,92vw); }
+        .card{ background:linear-gradient(180deg,#fff0 0%,#fff1 100%), var(--bg); padding:clamp(16px,3vw,40px); border-radius:18px; box-shadow:0 25px 50px -20px var(--shadow), 0 4px 14px -4px var(--shadow); }
+        .hint{ font-size:14px; opacity:.9; margin-top:10px; color:#f9d9c5; text-align:left; line-height:1.35 }
+
+        svg{ width:100%; height:auto; display:block; overflow:visible; }
+
+        /* Filled final lettering under the strokes so it looks crisp */
+        .final-fill{ fill:var(--paper); filter: drop-shadow(0 2px 1px #0003) drop-shadow(0 16px 30px #0003); }
+
+        /* Strokes drawn like a pen: single-line paths */
+        .stroke{ fill:none; stroke:var(--ink); stroke-width:var(--stroke-width); stroke-linecap:round; stroke-linejoin:round;
+            stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); }
+
+        /* Pen tip */
+        .pen{ filter: drop-shadow(0 2px 2px #0004); }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <svg viewBox="0 0 1400 280" aria-labelledby="title desc" role="img">
+            <title id="title">Lychee Guardians – stroke-by-stroke handwriting</title>
+            <desc id="desc">Each pen stroke is an individual SVG path. JS measures path length and animates it, one stroke at a time, with a pen tip following the current stroke.</desc>
+
+            <!-- ===== 1) FINAL LETTERFORM (any font) ===== -->
+            <!-- This sits below the strokes to provide the creamy fill once writing finishes. -->
+            <text x="30" y="190" class="final-fill" style="font: 128px 'Pacifico', cursive;">Lychee Guardians</text>
+
+            <!-- ===== 2) STROKES (single-line paths) ===== -->
+            <!-- IMPORTANT: Replace the demo strokes below with your own paths exported from Inkscape/Illustrator.
+                 * Draw the phrase with a tablet or the Pen tool, keeping each continuous pen movement as one path.
+                 * Select all strokes → Path > Simplify (optional) to reduce points.
+                 * Ensure strokes are on an empty fill, round caps/join.
+                 * Finally: Path > Object to Path, then copy each <path d="..."/> here, in stroke order. -->
+            <g id="strokes">
+                <!-- Demo paths (rough) for preview; replace with your true strokes. -->
+                <path class="stroke" d="M60,160 C90,60 160,100 170,180"/>
+                <path class="stroke" d="M176,175 C210,130 240,150 240,170"/>
+                <path class="stroke" d="M260,150 C295,135 308,180 280,182"/>
+                <path class="stroke" d="M320,120 C350,120 355,200 325,200"/>
+                <path class="stroke" d="M365,155 C400,120 430,180 390,190"/>
+                <path class="stroke" d="M430,150 C470,110 500,185 470,190"/>
+                <!-- gap for space -->
+                <path class="stroke" d="M560,180 C620,80 690,110 680,185"/>
+                <path class="stroke" d="M690,185 C730,150 770,155 760,195"/>
+                <path class="stroke" d="M790,160 C820,145 835,210 805,210"/>
+                <path class="stroke" d="M845,150 C885,120 905,200 870,205"/>
+                <path class="stroke" d="M915,150 C955,90 1000,180 970,195"/>
+                <path class="stroke" d="M1010,150 C1040,140 1070,190 1035,200"/>
+                <path class="stroke" d="M1080,150 C1110,110 1160,200 1110,210"/>
+                <path class="stroke" d="M1160,160 C1200,130 1230,195 1195,205"/>
+            </g>
+
+            <!-- 3) a moving pen tip -->
+            <g id="pen" class="pen" opacity="0">
+                <circle r="6" fill="var(--ink)"/>
+                <circle r="3" fill="#fff" opacity=".85"/>
+            </g>
+        </svg>
+
+        <div class="controls" style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:12px">
+            <label for="speed">Speed</label>
+            <input id="speed" type="range" min="0.5" max="3" value="1" step="0.05" aria-label="Speed multiplier">
+            <label id="speedVal">1.00×</label>
+            <button id="replay" style="border:none;padding:.5rem .8rem;border-radius:.75rem;background:#f7e2cf;color:#5a1c18;cursor:pointer">Replay</button>
+        </div>
+
+        <ol class="hint">
+            <li><b>Why the previous one looked like a wipe:</b> fonts are outlines, not pen traces. Animating outlines draws the contour, not the handwriting path.</li>
+            <li><b>How to get real handwriting:</b> use <i>single-line</i> paths—one path per pen stroke—in the correct order. The script below measures each path and animates it from start→end.</li>
+            <li><b>Quick workflow (Inkscape):</b> Type your phrase (for layout), lock it. On a new layer, draw over it with the Pen/Tablet; one continuous stroke per path. Select all your strokes → <i>Path ▸ Stroke to Path</i> is <u>not</u> needed (keep them as strokes). Instead, make sure they are <i>Object to Path</i> so you get clean <code>d="..."</code>. Copy paths here in order.</li>
+        </ol>
+    </div>
+</div>
+
+<script>
+    // Animate each stroke in sequence, with a pen tip following the active stroke.
+    const strokes = Array.from(document.querySelectorAll('#strokes .stroke'));
+    const pen = document.getElementById('pen');
+    const speedInput = document.getElementById('speed');
+    const speedVal = document.getElementById('speedVal');
+
+    function measure(){
+        strokes.forEach(p=>{
+            const L = p.getTotalLength();
+            p.style.setProperty('--len', L);
+            p.style.strokeDasharray = `${L} ${L}`;
+            p.style.strokeDashoffset = L;
+        });
+    }
+
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function ease(t){ return t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+
+    async function drawAll(){
+        pen.setAttribute('opacity','1');
+        for(const p of strokes){
+            await drawOne(p);
+            await wait(ms(get('--gap')));
+        }
+        pen.setAttribute('opacity','0');
+    }
+
+    function ms(cssVar){ return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(cssVar)); }
+    function get(v){ return getComputedStyle(document.documentElement).getPropertyValue(v); }
+
+    function wait(t){ return new Promise(r=>setTimeout(r,t)); }
+
+    function drawOne(path){
+        const L = path.getTotalLength();
+        const base = 900 + L * 0.9;   // duration scales with path length
+        const duration = base / parseFloat(speedInput.value);
+        let start=null;
+
+        return new Promise(res=>{
+            function frame(ts){
+                if(start===null) start = ts;
+                const t = Math.min(1, (ts - start)/duration);
+                const e = ease(t);
+                const offset = lerp(L, 0, e);
+                path.style.strokeDashoffset = offset;
+
+                // move pen along current stroke
+                const pt = path.getPointAtLength(Math.max(0, L - offset));
+                pen.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+
+                if(t < 1) requestAnimationFrame(frame);
+                else res();
+            }
+            requestAnimationFrame(frame);
+        });
+    }
+
+    function reset(){
+        measure();
+    }
+
+    document.getElementById('replay').addEventListener('click', ()=>{ reset(); drawAll(); });
+    speedInput.addEventListener('input', ()=>{ speedVal.textContent = `${parseFloat(speedInput.value).toFixed(2)}×`; });
+
+    // init
+    reset();
+    drawAll();
+</script>
+</body>
+</html>

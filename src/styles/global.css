@@ -139,7 +139,7 @@
 
 /* Navigation */
 .nav {
-  @apply sticky top-0 border-b border-gray-100;
+  @apply border-b border-gray-100;
   background: var(--color-cream-50);
   backdrop-filter: saturate(140%) blur(6px);
 }

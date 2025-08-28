@@ -13,7 +13,7 @@ const navItems = [
 ];
 ---
 
-<nav class="nav">
+<nav class="nav fixed top-0 left-0 right-0 z-50 transform -translate-y-full opacity-0 transition-all duration-1000 ease-out" id="main-nav">
   <div class="container">
     <div class="flex items-center justify-between">
       <a href="/" class="flex items-center gap-3">
@@ -70,11 +70,20 @@ const navItems = [
   document.addEventListener('DOMContentLoaded', function() {
     const button = document.getElementById('mobile-menu-button');
     const menu = document.getElementById('mobile-menu');
+    const nav = document.getElementById('main-nav');
     
     if (button && menu) {
       button.addEventListener('click', function() {
         menu.classList.toggle('hidden');
       });
     }
+    
+    // Listen for hero animation completion
+    document.addEventListener('heroAnimationComplete', function() {
+      if (nav) {
+        nav.classList.remove('-translate-y-full', 'opacity-0');
+        nav.classList.add('translate-y-0', 'opacity-100');
+      }
+    });
   });
 </script>
