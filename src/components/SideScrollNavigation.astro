@@ -1,0 +1,286 @@
+---
+// Side scroll navigation component
+---
+
+<div id="scroll-nav-container" class="fixed left-6 top-1/2 transform -translate-y-1/2 z-40">
+  <!-- Progress bar -->
+  <div class="w-2 bg-gray-300 rounded-full relative transition-all duration-300 hover:w-3 hover:shadow-lg progress-track" id="progress-track">
+    <div class="w-full bg-lychee-500 rounded-full transition-all duration-300 hover:shadow-glow" id="progress-bar" style="height: 0%;"></div>
+  </div>
+  
+  <!-- Section navigation dots -->
+  <div class="absolute -left-3 top-0 h-full flex flex-col justify-start py-4 space-y-8" id="nav-dots">
+    <div class="nav-dot" data-section="hero" data-label="Home">
+      <div class="dot"></div>
+      <div class="tooltip">🏠 Home</div>
+    </div>
+    <div class="nav-dot" data-section="about-section" data-label="About Lychee">
+      <div class="dot"></div>
+      <div class="tooltip">🍒 About Lychee</div>
+    </div>
+    <div class="nav-dot" data-section="lychee-properties" data-label="Lychee Properties">
+      <div class="dot"></div>
+      <div class="tooltip">⚡ Properties</div>
+    </div>
+    <div class="nav-dot" data-section="problem-section" data-label="Challenge">
+      <div class="dot"></div>
+      <div class="tooltip">🎯 Challenge</div>
+    </div>
+    <div class="nav-dot" data-section="deterioration-causes" data-label="Deterioration">
+      <div class="dot"></div>
+      <div class="tooltip">🔬 Deterioration</div>
+    </div>
+    <div class="nav-dot" data-section="science-section" data-label="Our Science">
+      <div class="dot"></div>
+      <div class="tooltip">🧬 Our Science</div>
+    </div>
+    <div class="nav-dot" data-section="wet-lab-intro" data-label="Wet Lab">
+      <div class="dot"></div>
+      <div class="tooltip">🧪 Wet Lab</div>
+    </div>
+    <div class="nav-dot" data-section="dry-lab-intro" data-label="Dry Lab">
+      <div class="dot"></div>
+      <div class="tooltip">💻 Dry Lab</div>
+    </div>
+    <div class="nav-dot" data-section="action-section" data-label="Get Started">
+      <div class="dot"></div>
+      <div class="tooltip">🚀 Get Started</div>
+    </div>
+  </div>
+  
+  <!-- Debug info -->
+  <div id="debug-info" class="fixed bottom-4 left-6 bg-black bg-opacity-75 text-white text-xs p-2 rounded opacity-0 pointer-events-none transition-opacity duration-200">
+    <div>Current Section: <span id="current-section-name">None</span></div>
+    <div>Scroll Progress: <span id="scroll-percentage">0%</span></div>
+    <div>Sections Found: <span id="sections-count">0</span></div>
+  </div>
+</div>
+
+<style>
+  #scroll-nav-container {
+    height: 400px;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-50%);
+  }
+  
+  #scroll-nav-container.visible {
+    opacity: 1;
+  }
+  
+  #scroll-nav-container:hover {
+    transform: translateY(-50%) scale(1.05);
+  }
+  
+  #scroll-nav-container:hover #debug-info {
+    opacity: 1;
+  }
+  
+  #progress-track {
+    height: 100%;
+  }
+  
+  .progress-track:hover {
+    transform: translateX(-2px);
+    background: linear-gradient(to bottom, #d1d5db, #9ca3af);
+  }
+  
+  .hover\:shadow-glow:hover {
+    box-shadow: 0 0 20px rgba(230, 57, 70, 0.6), 0 0 40px rgba(230, 57, 70, 0.4);
+  }
+  
+  /* Enhanced dot animations */
+  #scroll-nav-container:hover .nav-dot .dot {
+    transform: scale(1.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  #scroll-nav-container:hover .nav-dot.active .dot {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 5px rgba(230, 57, 70, 0.3);
+  }
+  
+  .nav-dot {
+    position: relative;
+    cursor: pointer;
+    padding: 8px;
+    margin: -8px;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    background: white;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .nav-dot.active .dot {
+    background: #e63946;
+    border-color: #e63946;
+    transform: scale(1.2);
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+  }
+  
+  .nav-dot:hover .dot {
+    transform: scale(1.2);
+    border-color: #e63946;
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.15);
+  }
+  
+  .tooltip {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .tooltip::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 4px solid transparent;
+    border-right-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .nav-dot:hover .tooltip {
+    opacity: 1;
+  }
+  
+  @media (max-width: 1024px) {
+    #scroll-nav-container {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navContainer = document.getElementById('scroll-nav-container');
+    const progressBar = document.getElementById('progress-bar');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const sections = Array.from(navDots).map(dot => {
+      const sectionId = dot.getAttribute('data-section');
+      return document.getElementById(sectionId);
+    }).filter(Boolean);
+    
+    let currentSection = 0;
+    let isScrolling = false;
+    
+    function updateProgress() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      
+      if (progressBar) {
+        progressBar.style.height = `${Math.min(scrollPercent, 100)}%`;
+      }
+      
+      // Update debug info
+      const scrollPercentageSpan = document.getElementById('scroll-percentage');
+      if (scrollPercentageSpan) {
+        scrollPercentageSpan.textContent = `${Math.round(scrollPercent)}%`;
+      }
+      
+      // Show/hide navigation container
+      if (navContainer) {
+        if (scrollTop > 100) {
+          navContainer.classList.add('visible');
+        } else {
+          navContainer.classList.remove('visible');
+        }
+      }
+    }
+    
+    function updateActiveSection() {
+      const scrollTop = window.pageYOffset + 100;
+      
+      let activeIndex = 0;
+      let activeSectionName = 'None';
+      
+      sections.forEach((section, index) => {
+        if (section && section.offsetTop <= scrollTop) {
+          activeIndex = index;
+          activeSectionName = navDots[index]?.getAttribute('data-label') || section.id || 'Unknown';
+        }
+      });
+      
+      if (activeIndex !== currentSection) {
+        navDots[currentSection]?.classList.remove('active');
+        navDots[activeIndex]?.classList.add('active');
+        currentSection = activeIndex;
+        
+        // Update debug info
+        const currentSectionSpan = document.getElementById('current-section-name');
+        if (currentSectionSpan) {
+          currentSectionSpan.textContent = activeSectionName;
+        }
+      }
+    }
+    
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        isScrolling = true;
+        section.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        
+        setTimeout(() => {
+          isScrolling = false;
+        }, 1000);
+      }
+    }
+    
+    // Click handlers for navigation dots
+    navDots.forEach(dot => {
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = dot.getAttribute('data-section');
+        if (sectionId) {
+          scrollToSection(sectionId);
+        }
+      });
+    });
+    
+    // Throttled scroll handler
+    let ticking = false;
+    function handleScroll() {
+      if (!ticking && !isScrolling) {
+        requestAnimationFrame(() => {
+          updateProgress();
+          updateActiveSection();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initial setup
+    updateProgress();
+    updateActiveSection();
+    
+    // Update sections count in debug info
+    const sectionsCountSpan = document.getElementById('sections-count');
+    if (sectionsCountSpan) {
+      sectionsCountSpan.textContent = sections.length.toString();
+    }
+  });
+</script>
