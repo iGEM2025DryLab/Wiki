@@ -1,0 +1,130 @@
+---
+export interface Props {
+  sections: { id: string; title: string; }[];
+  currentSection?: string;
+}
+
+const { sections, currentSection } = Astro.props;
+---
+
+<!-- Secondary Navigation Bar -->
+<nav class="secondary-nav fixed left-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block opacity-0 transition-all duration-1000" id="secondary-nav">
+  <div class="glass-dark rounded-2xl p-4 shadow-xl">
+    <div class="space-y-3">
+      {sections.map((section, index) => (
+        <div class="relative">
+          <a 
+            href={`#${section.id}`}
+            class="nav-dot-container flex items-center group transition-all duration-300"
+            data-section={section.id}
+          >
+            <div class="nav-dot w-3 h-3 rounded-full border-2 border-primary bg-dark transition-all duration-300 group-hover:scale-125 group-hover:bg-primary"></div>
+            <span class="nav-label ml-3 text-sm font-medium text-white opacity-0 transform translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 whitespace-nowrap">
+              {section.title}
+            </span>
+          </a>
+          <!-- Progress line -->
+          <div class="progress-line absolute left-[5px] top-6 w-0.5 h-8 bg-white/20 transition-all duration-500" style="display: none;"></div>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Progress indicator -->
+    <div class="progress-bar absolute left-[17px] top-4 w-0.5 bg-primary transition-all duration-500" style="height: 0;"></div>
+  </div>
+</nav>
+
+<style>
+  .nav-dot.active {
+    background-color: #00a3ff !important;
+    border-color: #00a3ff !important;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px rgba(0, 163, 255, 0.2);
+  }
+  
+  .glass-dark {
+    background: rgba(18, 18, 18, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-dot-container:last-child .progress-line {
+    display: none !important;
+  }
+  
+  .progress-line:not(:last-child) {
+    display: block !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const secondaryNav = document.getElementById('secondary-nav');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const progressBar = document.querySelector('.progress-bar');
+    const sections = document.querySelectorAll('section[id]');
+    
+    // Show secondary nav after hero animation
+    document.addEventListener('heroAnimationComplete', function() {
+      if (secondaryNav) {
+        secondaryNav.classList.remove('opacity-0');
+        secondaryNav.classList.add('opacity-100');
+      }
+    });
+    
+    // Smooth scroll on click
+    document.querySelectorAll('.nav-dot-container').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('data-section');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Update active section on scroll
+    function updateActiveSection() {
+      const scrollY = window.pageYOffset;
+      let currentSectionIndex = 0;
+      
+      sections.forEach((section, index) => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.offsetHeight;
+        
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          currentSectionIndex = index;
+        }
+      });
+      
+      // Update active dot
+      navDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSectionIndex);
+      });
+      
+      // Update progress bar
+      if (progressBar && navDots.length > 0) {
+        const progress = (currentSectionIndex / (navDots.length - 1)) * 100;
+        progressBar.style.height = `${Math.min(progress, 85)}%`;
+      }
+    }
+    
+    // Throttled scroll handler
+    let ticking = false;
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateActiveSection);
+        ticking = true;
+        setTimeout(() => { ticking = false; }, 16);
+      }
+    }
+    
+    window.addEventListener('scroll', requestTick);
+    updateActiveSection(); // Initial call
+  });
+</script>

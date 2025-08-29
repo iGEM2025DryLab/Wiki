@@ -6,9 +6,13 @@
       "Read(D:\\code\\iGEM\\Page\\writing\\demo/**)",
       "Read(D:\\code\\iGEM\\Page\\writing\\src\\pages/**)",
       "Read(D:\\code\\iGEM\\Page\\writing\\src\\components/**)",
-      "Read(D:\\code\\iGEM\\Page\\writing\\src\\components/**)"
+      "Read(D:\\code\\iGEM\\Page\\writing\\src\\components/**)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "D:\\code\\iGEM\\Page"
+    ]
   }
 }

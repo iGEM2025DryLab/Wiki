@@ -81,6 +81,30 @@ const navItems = [
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
+  /* Dark page compatibility */
+  :global(body.dark-page) .nav {
+    background: rgba(18, 18, 18, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  :global(body.dark-page) .nav.scrolled {
+    background: rgba(18, 18, 18, 0.98);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  :global(body.dark-page) .nav a {
+    color: #e5e7eb !important;
+  }
+  
+  :global(body.dark-page) .nav a:hover {
+    color: #00a3ff !important;
+  }
+  
+  :global(body.dark-page) .nav .nav-link[aria-current="page"] {
+    color: #00a3ff !important;
+    background: rgba(0, 163, 255, 0.1) !important;
+  }
+  
   /* Logo letter animations */
   .logo-text {
     font-size: 1.5rem;
@@ -107,6 +131,7 @@ const navItems = [
     opacity: 1;
     transform: scale(1);
     max-width: 1em;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .word-spacer {
@@ -114,6 +139,7 @@ const navItems = [
     transform: scale(1);
     width: 0.5em;
     display: inline-block;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   /* Scrolled state - hide fade letters and word spacer */
